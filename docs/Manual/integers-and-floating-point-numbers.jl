@@ -13,7 +13,7 @@
 #     name: julia-1.8
 # ---
 
-# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
+# + [markdown] tags=[]
 # # Integers and Floating-Point Numbers
 
 # + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
@@ -98,7 +98,7 @@ end
 T
 
 # + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
-# ## Overflow behavior
+# ### Overflow behavior
 # -
 
 x = typemax(Int64)
@@ -112,7 +112,7 @@ x + 1 == typemin(Int64)
 big(10)^19
 
 # + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
-# ## Division errors
+# ### Division errors
 
 # + jupyter={"outputs_hidden": true} tags=[]
 ?div
@@ -176,3 +176,274 @@ sizeof(Float16(4.))
 2*Float16(4.)
 
 10_000, 0.000_000_005, 0xdead_beef, 0b1011_0010
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
+# ### Float-point zero
+# -
+
+0.0 == -0.0
+
+bitstring(0.0)
+
+bitstring(-0.0)
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
+# ### Special floating-point values
+# -
+
+Inf16, Int32, Inf
+
+-Inf16, -Inf32, -Inf
+
+NaN16, NaN32, NaN
+
+1/Inf
+
+1/0
+
+-5/0
+
+0.000001/0
+
+0/0
+
+500 + Inf
+
+500 - Inf
+
+500 * Inf
+
+Inf + Inf
+
+Inf - Inf
+
+Inf * Inf
+
+Inf / Inf
+
+0 * Inf
+
+NaN == NaN
+
+NaN != NaN
+
+NaN < NaN
+
+NaN > NaN
+
+typemin(Float16), typemax(Float16)
+
+typemin(Float32), typemax(Float32)
+
+typemin(Float64), typemax(Float64)
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
+# ### Machine epsilon
+# -
+
+eps(Float32)
+
+2.0^-23
+
+eps(Float64)
+
+eps()
+
+2.0^-52
+
+eps(1.0)
+
+eps(1000.)
+
+eps(1e-27)
+
+eps(0.0)
+
+x = 4.5
+
+eps(x)
+
+x + eps(x)
+
+nextfloat(x)
+
+x = 1.25f0
+
+nextfloat(x)
+
+prevfloat(x)
+
+x - eps(x)
+
+bitstring(prevfloat(x))
+
+bitstring(x)
+
+bitstring(nextfloat(x))
+
+bitstring(prevfloat(x))
+
+# ### Round modes
+
+# + jupyter={"outputs_hidden": true} tags=[]
+?RoundNearest
+
+# + jupyter={"outputs_hidden": true} tags=[]
+?RoundDown
+
+# + jupyter={"outputs_hidden": true} tags=[]
+?round
+# -
+
+# ### [Background and References](https://docs.julialang.org/en/v1/manual/integers-and-floating-point-numbers/#Background-and-References)
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
+# ## Arbitrary Precision Arithmetic
+# -
+
+BigInt(typemax(Int64)) + 1
+
+big"123456789012345678901234567890" + 1
+
+parse(BigInt, "123456789012345678901234567890") + 1
+
+string(big"2"^200, base=16)
+
+0x100000000000000000000000000000000-1 == typemax(UInt128)
+
+0x000000000000000000000000000000000
+
+typeof(ans)
+
+3+1
+
+ans
+
+big"1.23456789012345678901"
+
+parse(BigFloat, "1.23456789012345678901")
+
+BigFloat(2.0^66) / 3
+
+factorial(BigInt(40))
+
+# + jupyter={"outputs_hidden": true} tags=[]
+?factorial
+# -
+
+x = typemin(Int64)
+
+x = x - 1
+
+typeof(x)
+
+y = BigInt(typemin(Int64))
+
+y = y - 1
+
+typeof(y)
+
+# + jupyter={"outputs_hidden": true} tags=[]
+?setprecision
+
+# + jupyter={"outputs_hidden": true} tags=[]
+?setrounding
+# -
+
+setrounding(BigFloat, RoundUp) do
+   BigFloat(1) + parse(BigFloat, "0.1") 
+end
+
+setrounding(BigFloat, RoundDown) do
+   BigFloat(1) + parse(BigFloat, "0.1") 
+end
+
+setprecision(40) do
+   BigFloat(1) + parse(BigFloat, "0.1") 
+end
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
+# ## Numeric Literal Coefficients
+# -
+
+x = 3
+
+2x^2 - 3x + 1
+
+1.5x^2 - .5x + 1
+
+2^2x
+
+2x
+
+-2x
+
+√2
+
+√2x
+
+(√2)x
+
+√(2x)
+
+2^3x
+
+2^(3x)
+
+(2^3)x
+
+2x^3
+
+2*(x^3)
+
+(2*x)^3
+
+2(x-1)^2 - 3(x-1) + 1
+
+1 / 2im
+
+6 // 2(2 + 1)
+
+(x-1)x
+
+(x-1)(x+1)
+
+x(x+1)
+
+2 x
+
+(x+1) x
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
+# ### Syntax Conflicts
+# -
+
+0xff
+
+xff = -0.0
+
+0 * -0.0
+
+0xff
+
+0 * xff
+
+1e100
+
+1E100
+
+F22 = 2
+
+1.5F22
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
+# ## Literal zero and one
+# -
+
+zero(Float32)
+
+zero(1.0)
+
+one(Int32)
+
+one(BigFloat)
