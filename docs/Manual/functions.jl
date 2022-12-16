@@ -159,30 +159,372 @@ get(()->time(), dict, key)
 
 get(()->time(), dict, "c")
 
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
 # ## Tuples
+# -
 
+(1, 1+1)
+
+(1,)
+
+x = (0.0, "hello", 6*7)
+
+x[2]
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
 # ## Named Tuples
+# -
 
+x = (a=2, b=1+2)
+
+x[1]
+
+x.a
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
 # ## Destructuring Assignment and Multiple Return Values
+# -
 
+(a,b,c) = 1:3
+
+b
+
+function foo(a,b)
+    a+b, a*b
+end
+
+foo(2,3)
+
+x, y = foo(2,3)
+
+x
+
+y
+
+y, x = x, y
+
+x
+
+y
+
+_, _, _, d = 1:10
+
+d
+
+X = zeros(3);
+
+X
+
+X[1], (a,b) = (1, (2, 3))
+
+X
+
+a
+
+b
+
+a, b... = "hello"
+
+a
+
+b
+
+a, b... = Iterators.map(abs2, 1:4)
+
+a
+
+b
+
+?Base.rest
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
 # ## Property destructuring
+# -
 
+(; b, a) = (a=1, b=2, c=3)
+
+a
+
+b
+
+c
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
 # ## Argument destructuring
+# -
 
+mnmx(x, y) = (y < x) ? (y, x) : (x, y)
+
+gap((min, max)) = max - min
+
+gap(mnmx(10, 2))
+
+foo((; x, y)) = x + y
+
+foo((x=1, y=2))
+
+struct A
+    x
+    y
+end
+
+foo(A(3, 4))
+
+map(((x,y),) -> x + y, [(1,2), (3,4)])
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
 # ## Varargs Functions
+# -
 
+bar(a,b,x...) = (a,b,x)
+
+bar(1,2)
+
+bar(1,2,3)
+
+bar(1,2,3,4)
+
+bar(1,2,3,4,5,6)
+
+x = (3, 4)
+
+bar(1,2,x...)
+
+x = (2, 3, 4)
+
+bar(1,x...)
+
+x = (1, 2, 3, 4)
+
+bar(x...)
+
+x = [3,4]
+
+bar(1,2,x...)
+
+x = [1,2,3,4]
+
+bar(x...)
+
+baz(a,b) = a + b;
+
+args = [1,2]
+
+baz(args...)
+
+args = [1,2,3]
+
+baz(args...)
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
 # ## Optional Arguments
+# -
 
+function 📅(y::Int64, m::Int64=1, d::Int64=1)
+    err = validargs(📅, y, m, d)
+    err === nothing || throw(err)
+    return 📅(UTD(totaldays(y, m, d)))
+end
+
+?UTD
+
+?UTInstant
+
+?totaldays
+
+📅(2022)
+
+using Dates
+
+?Date
+
+Date(2000, 12, 12)
+
+Date(2000, 12)
+
+Date(2000)
+
+methods(Date)
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
 # ## Keyword Arguments
+# -
 
+function plot(x, y; style="solid", width=1, color="black")
+    ###
+end
+
+x, y = 1, 2
+
+plot(x, y, width=2)
+
+plot(x, y; width=2)
+
+function f(;x::Int=1)
+    ###
+end
+
+function plot(x...; style="solid")
+    ###
+end
+
+function f(x; y=0, kwargs...)
+    ###
+end
+
+function f(x; y)
+    ###
+end
+
+f(3, y=5)
+
+f(3)
+
+plot(x, y; :width => 2)
+
+struct options
+    width
+end
+
+opt = options(4)
+
+opt.width
+
+function plot(x, y; width=2)
+    println("width = $width")
+end
+
+methods(plot)
+
+plot(x, y; opt.width)
+
+plot(x, y; opt..., width=2)
+
+plot(x, y; width=2, width=3)
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
 # ## Evaluation Scope of Default Values
+# -
 
+function f(x, a=b, b=1)
+    println("x = $x, a = $a, b = $b")
+end
+
+f(3,4,5)
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
 # ## Do-Block Syntax for Function Arguments
+# -
 
+A¹, _, B, C = -2:1
+
+map(x->begin
+            if x < 0 && iseven(x)
+                return 0
+            elseif x == 0
+                return 1
+            else
+                return x
+            end
+        end,
+    [A¹, B, C])
+
+map([A¹, B, C]) do x
+    if x < 0 && iseven(x)
+        return 0
+    elseif x == 0
+        return 1
+    else
+        return x
+    end
+end
+
+open("outfile", "w") do io
+    write(io, "hello")
+end
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
 # ## Function composition and piping
+# -
 
+?∘
+
+(sqrt ∘ +)(3, 6)
+
+sqrt(+(3, 6))
+
+map(first ∘ reverse ∘ uppercase, split("you can compose functions like this"))
+
+?|>
+
+1:10 |> sum |> sqrt
+
+(sqrt ∘ sum)(1:10)
+
+["a", "list", "of", "strings"] .|> [uppercase, reverse, titlecase, length]
+
+1:3 .|> (x -> x^2) |> sum |> sqrt
+
+1:3 .|> x -> x^2 |> sum |> sqrt
+
+# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
 # ## Dot Syntax for Vectorizing Functions
+# -
 
-# ## Further Reading
+A² = [1.0, 2.0, 3.0]
 
+sin.(A²)
 
+f(x,y) = 3x + 4y;
+
+A³ = [1.0, 2.0, 3.0];
+
+B = [4.0, 5.0, 6.0];
+
+methods(f)
+
+f.(pi, A³)
+
+f.(A³, B)
+
+C = [7.0, 8.0];
+
+f.(B, C)
+
+x = [4.41123440, 9.18671, 3.84521, 5.5235];
+
+round.(x, digits=3)
+
+# + jupyter={"outputs_hidden": true} tags=[]
+?broadcast
+# -
+
+broadcast(x -> round(x, digits=3), x)
+
+X = 5:8;
+
+sin.(cos.(X))
+
+broadcast(x -> sin(cos(x)), X)
+
+[sin(cos(x)) for x in X]
+
+sin.(sort(cos.(X)))
+
+Y = [1.0, 2.0, 3.0, 4.0];
+
+?similar
+
+X = similar(Y);
+
+@. X = sin(cos(Y))
+
+X .= sin.(cos.(Y))
+
+broadcast!(sin ∘ cos, X, Y)
+
+X
+
+[1:5;] .|> [x->x^2, inv, x->2*3, -, isodd]
+
+# # Further Reading
